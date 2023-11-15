@@ -4,12 +4,14 @@ import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 const timeInput = document.querySelector('#datetime-picker');
 const btnStart = document.querySelector('button[data-start]');
-let daysTimer = document.querySelector('span[data-days]');
-let hoursTimer = document.querySelector('span[data-hours]');
-let minutesTimer = document.querySelector('span[data-minutes]');
-let secondsTimer = document.querySelector('span[data-seconds]');
+const daysTimer = document.querySelector('span[data-days]');
+const hoursTimer = document.querySelector('span[data-hours]');
+const minutesTimer = document.querySelector('span[data-minutes]');
+const secondsTimer = document.querySelector('span[data-seconds]');
 
-btnStart.setAttribute('disabled', true);
+const TIMER_DELAY = 1000;
+
+btnStart.disabled = true;
 
 flatpickr(timeInput, {
   enableTime: true,
@@ -23,12 +25,8 @@ flatpickr(timeInput, {
       Notify.failure('Please choose a date in the future');
       return;
     }
-    btnStart.removeAttribute('disabled');
+    btnStart.disabled = false;
     Notify.success('The selected date is correct :)');
-    // if (selectedDates[0] - Date.now() <= 0) {
-    //   console.log(celectDate - Date.now());
-    //   clearInterval(intervalId);
-    // }
 
     btnStart.addEventListener('click', () => {
       intervalId = setInterval(() => {
@@ -37,8 +35,13 @@ flatpickr(timeInput, {
         daysTimer.textContent = `${days}`;
         hoursTimer.textContent = `${hours}`;
         minutesTimer.textContent = `${minutes}`;
-        secondsTimer.textContent = `${seconds}`;
-      }, 1000);
+          secondsTimer.textContent = `${seconds}`;
+          
+        if (deltaTime <= TIMER_DELAY) {
+          //   console.log(deltaTime);
+          clearInterval(intervalId);
+        }
+      }, TIMER_DELAY);
     });
   },
 });
@@ -71,4 +74,4 @@ function convertMs(ms) {
 // Напиши скрипт таймера, який здійснює зворотний відлік до певної дати.
 // Такий таймер може використовуватися у блогах та інтернет - магазинах,
 // сторінках реєстрації подій, під час технічного обслуговування тощо.
-// Подивися демо - відео роботи таймера.
+// Подивися демо - відео роботи таймера. 
